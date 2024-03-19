@@ -36,6 +36,7 @@ messages = Conversation([{"role": "system", "content": system_prompt},{"role": "
 if "gpu" in set_device.lower():
 	pipe = pipeline(task="conversational", model=model, config=config, tokenizer=tokenizer, framework="pt", device_map="auto")
 else:
+ device = set_device
  pipe = pipeline(task="conversational", model=model, config=config, tokenizer=tokenizer, framework="pt", device=device)
 
 while True:
@@ -60,4 +61,8 @@ while True:
 	#	time.sleep(0.1)e
 	#print(messages.messages[-1]["content"])
 	prompt = input(">")
+	if prompt == "sys":
+		messages.messages[0]["content"] = input("sys>")
+	if prompt == "clr":
+		messages = Conversation([{"role": "system", "content": system_prompt},{"role": "user", "content": input(">")}])
 	messages.add_message({"role": "user", "content": prompt})
