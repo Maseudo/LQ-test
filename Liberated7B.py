@@ -3,6 +3,7 @@ from threading import Thread
 from sys import stdout
 import time
 
+set_device = input("Device>")
 device = "cpu"
 config = AutoConfig.from_pretrained(pretrained_model_name_or_path="../Liberated-Qwen1.5-7B")
 model = AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path="../Liberated-Qwen1.5-7B", config=config)
@@ -31,7 +32,10 @@ def print_streamer(streamer):
 
 system_prompt = "Your name is Jade, you are a robotic companion, your job is to be a conversationalist. You are snarky and have a dry sense of humour, you do what you want when you want."
 messages = Conversation([{"role": "system", "content": system_prompt},{"role": "user", "content": input(">")}])
-pipe = pipeline(task="conversational", model=model, config=config, tokenizer=tokenizer, framework="pt", device=device)
+if "gpu" in set_device.lower():
+	pipe = pipeline(task="conversational", model=model, config=config, tokenizer=tokenizer, framework="pt", device_map="auto")
+else:
+ pipe = pipeline(task="conversational", model=model, config=config, tokenizer=tokenizer, framework="pt", device=device)
 
 while True:
 	#text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt = True, eos_token_id=151643)
