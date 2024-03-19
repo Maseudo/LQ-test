@@ -1,4 +1,5 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig, pipeline, Conversation, TextIteratorStreamer
+import accelerate
 from threading import Thread
 from sys import stdout
 import time
